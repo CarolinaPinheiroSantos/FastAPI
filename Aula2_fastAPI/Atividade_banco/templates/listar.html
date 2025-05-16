@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cadastro de Filmes</title>
+</head>
+<body>
+    <h1>Filmes em cartaz</h1>
+    <ul>
+        {% for filme in filmes %}
+        <li>
+            <strong>Filme: </strong>{{ filme.filme }}<br>
+            <strong>Genero: </strong>{{ filme.genero }}<br>
+            <strong>Classificacao: </strong>{{ filme.classificacao }}<br>
+            <strong>Sobre: </strong> {{ filme.sobre }}<br>
+            <strong>Data e horário: </strong> {{ filme.data_horario }}<br>
+            <img src="{{ filme.capa }}" width="200"><br><br>
+            <form action="/excluir/{{ filme.id }}" method="post">
+                <button type="submit">Excluir</button>
+            </form>
+            <a href="/editar/{{ filme.id }}">Editar</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="/">Voltar</a>
+</body>
+</html>

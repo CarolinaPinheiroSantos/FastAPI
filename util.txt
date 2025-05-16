@@ -1,0 +1,8 @@
+instalar: 
+pip install fastapi uvicorn asyncmy sqlalchemy
+
+util:
+uvicorn main:app --reload
+
+http://127.0.0.1:8000/docs
+
