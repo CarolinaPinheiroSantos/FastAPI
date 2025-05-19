@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cadastro de Filmes</title>
+    <title>Filmes em Cartaz</title>
 </head>
 <body>
+     <h1>Bem vindo ao Cinema da Carol</h1>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTomNhwui7tnnanAITwH7nWxNhEANElF39RZw&s">
     <h1>Filmes em cartaz</h1>
     <ul>
         {% for filme in filmes %}
         <li>
             <strong>Filme: </strong>{{ filme.filme }}<br>
-            <strong>Genero: </strong>{{ filme.genero }}<br>
-            <strong>Classificacao: </strong>{{ filme.classificacao }}<br>
-            <strong>Sobre: </strong> {{ filme.sobre }}<br>
-            <strong>Data e horário: </strong> {{ filme.data_horario }}<br>
+            <strong>Gênero: </strong>{{ filme.genero }}<br>
+            <strong>Classificação: </strong>{{ filme.classificacao }}<br>
+            <strong>Sobre: </strong>{{ filme.sobre }}<br>
+            <strong>Data e horário: </strong>{{ filme.data_horario }}<br>
             <img src="{{ filme.capa }}" width="200"><br><br>
-            <form action="/excluir/{{ filme.id }}" method="post">
-                <button type="submit">Excluir</button>
+            <form action="/excluir/{{ filme.id }}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
             </form>
             <a href="/editar/{{ filme.id }}">Editar</a>
         </li>
+        <hr>
         {% endfor %}
     </ul>
-    <a href="/">Voltar</a>
+    <a href="/cadastrar">Cadastrar novo filme</a>
 </body>
 </html>

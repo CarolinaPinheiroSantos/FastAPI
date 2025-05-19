@@ -4,8 +4,11 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from model import Cinema
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="API de Cinema", description="API programação dos filmes em cartaz no cinema")
+
+app.mount("/styles", StaticFiles(directory="styles"), name="styles")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -17,21 +20,21 @@ def get_db():
         db.close()
 
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
-
-
-@app.get("/listar", response_class=HTMLResponse)
-def listar(request: Request, db: Session = Depends(get_db)):
+def home(request: Request, db: Session = Depends(get_db)):
     filmes = db.query(Cinema).all()
     return templates.TemplateResponse("listar.html", {
         "request": request,
         "filmes": filmes
     })
 
-@app.post("/adicionar", response_class=HTMLResponse)
+@app.get("/cadastrar", response_class=HTMLResponse)
+def cadastrar(request: Request):
+    return templates.TemplateResponse("home.html", {
+        "request": request
+    })
+
+@app.post("/adicionar")
 def adicionar(
-    request: Request,
     filme: str = Form(...),
     classificacao: int = Form(...),
     genero: str = Form(...),
@@ -51,19 +54,8 @@ def adicionar(
     db.add(novo)
     db.commit()
     db.refresh(novo)
-    return templates.TemplateResponse("home.html", {
-        "request": request
-    })
 
-@app.delete("/excluir/{filme_id}")
-def excluir(filme_id: int, db: Session = Depends(get_db)):
-    filme = db.query(Cinema).filter(Cinema.id == filme_id).first()
-    if not filme:
-        raise HTTPException(status_code=404, detail="Filme não encontrado")
-    db.delete(filme)
-    db.commit()
-    return RedirectResponse(url="/listar", status_code=303)
-
+    return RedirectResponse(url="/", status_code=303)
 
 @app.get("/editar/{filme_id}", response_class=HTMLResponse)
 def editar(filme_id: int, request: Request, db: Session = Depends(get_db)):
@@ -76,8 +68,16 @@ def editar(filme_id: int, request: Request, db: Session = Depends(get_db)):
     })
 
 @app.post("/atualizar/{filme_id}")
-def atualizar(filme_id: int, filme: str = Form(...), classificacao: int = Form(...), genero: str = Form(...), 
-              sobre: str = Form(...), capa: str = Form(...), data_horario: str = Form(...), db: Session = Depends(get_db)):
+def atualizar(
+    filme_id: int,
+    filme: str = Form(...),
+    classificacao: int = Form(...),
+    genero: str = Form(...),
+    sobre: str = Form(...),
+    capa: str = Form(...),
+    data_horario: str = Form(...),
+    db: Session = Depends(get_db)
+):
     filme_db = db.query(Cinema).filter(Cinema.id == filme_id).first()
     if not filme_db:
         raise HTTPException(status_code=404, detail="Filme não encontrado")
@@ -91,5 +91,59 @@ def atualizar(filme_id: int, filme: str = Form(...), classificacao: int = Form(.
 
     db.commit()
     db.refresh(filme_db)
+    return RedirectResponse(url="/", status_code=303)
 
-    return RedirectResponse(url="/listar", status_code=303)
+@app.post("/excluir/{filme_id}")
+def excluir(filme_id: int, db: Session = Depends(get_db)):
+    filme = db.query(Cinema).filter(Cinema.id == filme_id).first()
+    if not filme:
+        raise HTTPException(status_code=404, detail="Filme não encontrado")
+    db.delete(filme)
+    db.commit()
+    return RedirectResponse(url="/", status_code=303)
+
+#PUT e delete
+# @app.put("/filme/{filme_id}")
+# def atualizar_filme_completo(
+#     filme_id: int,
+#     payload: dict = Body(...),
+#     db: Session = Depends(get_db)
+# ):
+#     filme = db.query(Cinema).filter(Cinema.id == filme_id).first()
+#     if not filme:
+#         raise HTTPException(status_code=404, detail="Filme não encontrado")
+
+#     for key, value in payload.items():
+#         setattr(filme, key, value)
+
+#     db.commit()
+#     db.refresh(filme)
+#     return {"msg": "Filme atualizado com PUT", "filme": payload}
+
+# @app.patch("/filme/{filme_id}")
+# def atualizar_filme_parcial(
+#     filme_id: int,
+#     payload: dict = Body(...),
+#     db: Session = Depends(get_db)
+# ):
+#     filme = db.query(Cinema).filter(Cinema.id == filme_id).first()
+#     if not filme:
+#         raise HTTPException(status_code=404, detail="Filme não encontrado")
+
+#     for key, value in payload.items():
+#         if hasattr(filme, key):
+#             setattr(filme, key, value)
+
+#     db.commit()
+#     db.refresh(filme)
+#     return {"msg": "Filme atualizado com PATCH", "filme": payload}
+
+# @app.delete("/filme/{filme_id}")
+# def excluir_filme_api(filme_id: int, db: Session = Depends(get_db)):
+#     filme = db.query(Cinema).filter(Cinema.id == filme_id).first()
+#     if not filme:
+#         raise HTTPException(status_code=404, detail="Filme não encontrado")
+
+#     db.delete(filme)
+#     db.commit()
+#     return {"msg": f"Filme ID {filme_id} deletado com sucesso"}
