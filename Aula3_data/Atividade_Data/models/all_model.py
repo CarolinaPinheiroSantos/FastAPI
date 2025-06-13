@@ -1,0 +1,2 @@
+from models.acessorio_model import AcessorioModel
+from models.roupa_model import RoupaModel

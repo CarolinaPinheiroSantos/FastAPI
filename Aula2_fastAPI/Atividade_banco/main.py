@@ -4,11 +4,8 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from model import Cinema
-from fastapi.staticfiles import StaticFiles
 
-app = FastAPI(title="API de Cinema", description="API programação dos filmes em cartaz no cinema")
-
-app.mount("/styles", StaticFiles(directory="styles"), name="styles")
+app = FastAPI(title="API de Cinema", description="API programação dos filmes em cartaz no cinema da Carol")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -27,9 +24,9 @@ def home(request: Request, db: Session = Depends(get_db)):
         "filmes": filmes
     })
 
-@app.get("/cadastrar", response_class=HTMLResponse)
-def cadastrar(request: Request):
-    return templates.TemplateResponse("home.html", {
+@app.get("/cadastro", response_class=HTMLResponse)
+def cadastro(request: Request):
+    return templates.TemplateResponse("cadastro.html", {
         "request": request
     })
 
@@ -101,49 +98,3 @@ def excluir(filme_id: int, db: Session = Depends(get_db)):
     db.delete(filme)
     db.commit()
     return RedirectResponse(url="/", status_code=303)
-
-#PUT e delete
-# @app.put("/filme/{filme_id}")
-# def atualizar_filme_completo(
-#     filme_id: int,
-#     payload: dict = Body(...),
-#     db: Session = Depends(get_db)
-# ):
-#     filme = db.query(Cinema).filter(Cinema.id == filme_id).first()
-#     if not filme:
-#         raise HTTPException(status_code=404, detail="Filme não encontrado")
-
-#     for key, value in payload.items():
-#         setattr(filme, key, value)
-
-#     db.commit()
-#     db.refresh(filme)
-#     return {"msg": "Filme atualizado com PUT", "filme": payload}
-
-# @app.patch("/filme/{filme_id}")
-# def atualizar_filme_parcial(
-#     filme_id: int,
-#     payload: dict = Body(...),
-#     db: Session = Depends(get_db)
-# ):
-#     filme = db.query(Cinema).filter(Cinema.id == filme_id).first()
-#     if not filme:
-#         raise HTTPException(status_code=404, detail="Filme não encontrado")
-
-#     for key, value in payload.items():
-#         if hasattr(filme, key):
-#             setattr(filme, key, value)
-
-#     db.commit()
-#     db.refresh(filme)
-#     return {"msg": "Filme atualizado com PATCH", "filme": payload}
-
-# @app.delete("/filme/{filme_id}")
-# def excluir_filme_api(filme_id: int, db: Session = Depends(get_db)):
-#     filme = db.query(Cinema).filter(Cinema.id == filme_id).first()
-#     if not filme:
-#         raise HTTPException(status_code=404, detail="Filme não encontrado")
-
-#     db.delete(filme)
-#     db.commit()
-#     return {"msg": f"Filme ID {filme_id} deletado com sucesso"}

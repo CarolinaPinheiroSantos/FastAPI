@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cadastro de Filme</title>
+</head>
+<body>
+    <h1>Cadastro de Filmes</h1>
+    <form action="/adicionar" method="post">
+        Filme: <input type="text" name="filme" required><br>
+        Classificação: <input type="number" name="classificacao" required><br>
+        Gênero: <input type="text" name="genero" required><br>
+        Sobre: <input type="text" name="sobre" required><br>
+        Capa (URL): <input type="text" name="capa" required><br>
+        Data e horário: <input type="text" name="data_horario" required><br>
+        <input type="submit" value="Cadastrar">
+    </form>
+    <br>
+    <button onclick="window.location.href='/'">Voltar para lista de filmes</button>
+</body>
+</html>

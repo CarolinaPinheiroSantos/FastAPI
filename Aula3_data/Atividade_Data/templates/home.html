@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>lojinha minha</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+    <div class="header">
+        <p>Loja da rainha do 5S</p>
+        <div class="rotas">
+            <a>Inicio</a>
+            <a>Contato</a>
+            <a>Sobre Nós</a>
+        </div>
+    </div>
+
+    <img src="https://marketplace.canva.com/EAFnnTbsH64/1/0/1600w/canva-banner-paisagem-loja-de-roupas-moderno-minimalista-bege-e-preto-q2xrLcee-HE.jpg" width="100%" height="600rem">
+
+    <h1>Roupas</h1>
+    <div class="roupas-container">
+        {% for roupa in roupas %}
+        <div class="produto-card">
+            <strong>Nome:</strong> {{ roupa.nome }}<br>
+            <strong>Peça:</strong> {{ roupa.peca }}<br>
+            <strong>Valor:</strong> R$ {{ roupa.valor }}<br>
+            <strong>Cor:</strong> {{ roupa.cor }}<br>
+            <strong>Tamanho:</strong> {{ roupa.tamanho }}<br>
+            <img src="{{ roupa.foto }}" width="200"><br><br>
+        </div>
+        {% else %}
+        <p>Não há roupas cadastradas.</p>
+        {% endfor %}
+    </div>
+
+    <h1>Acessórios</h1>
+    <div class="acessorios-container">
+        {% for acessorio in acessorios %}
+        <div class="produto-card">
+            <strong>Nome:</strong> {{ acessorio.nome }}<br>
+            <strong>Tipo:</strong> {{ acessorio.tipo }}<br>
+            <strong>Valor:</strong> R$ {{ acessorio.valor }}<br>
+            <strong>Cor:</strong> {{ acessorio.cor }}<br>
+            <img src="{{ acessorio.foto }}" width="200"><br><br>
+        </div>
+        {% else %}
+        <p>Não há acessórios cadastrados.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

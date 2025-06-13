@@ -1,0 +1,2 @@
+from schemas.acessorio_schema import AcessorioSchema
+from schemas.roupa_schema import RoupaSchema
